@@ -11,23 +11,25 @@ type watch_id
  * AltitudeAccuracy: not supported on android devices and Amazon Fire OS. Set
  * null in these cases.
  *)
-type coordinates =
-  <
-    latitude            : float Js.opt Js.readonly_prop ;
-    longitude           : float Js.opt Js.readonly_prop ;
-    altitude            : float Js.opt Js.readonly_prop ;
-    accuracy            : float Js.opt Js.readonly_prop ;
-    altitudeAccuracy    : float Js.opt Js.readonly_prop ;
-    heading             : float Js.opt Js.readonly_prop ;
-    speed               : float Js.opt Js.readonly_prop
-  > Js.t
+class coordinates : Ojs.t ->
+  object
+    inherit Ojs.obj
+    method latitude            : float option
+    method longitude           : float option
+    method altitude            : float option
+    method accuracy            : float option
+    method altitudeAccuracy    : float option
+    method heading             : float option
+    method speed               : float option
+  end
 
 (* A timestamp is just an integer *)
-type position =
-  <
-    coords              : coordinates Js.readonly_prop ;
-    timestamp           : int Js.readonly_prop
-  > Js.t
+class position : Ojs.t ->
+  object
+    inherit Ojs.obj
+    method coords              : coordinates
+    method timestamp           : int
+  end
 (* -------------------------------------------------------------------------- *)
 
 (* -------------------------------------------------------------------------- *)
@@ -36,43 +38,69 @@ type position =
  * int. For the binding, we need to use an integer but we provide a
  * position_error type and a function taking the integer returned by the error
  * whic returns the corresping value for the ocaml type. *)
+[@@@js.stop]
 type position_error_code
 val position_error_code_to_value : int -> position_error_code
+[@@@js.start]
 
-type position_error =
-  <
-    code      : int Js.readonly_prop ;
-    message   : Js.js_string Js.t Js.readonly_prop
-  > Js.t
-(* -------------------------------------------------------------------------- *)
+[@@@js.implem
+type position_error_code =
+  | Permission_denied
+  | Position_unavailable
+  | Timeout
+  | Unknown
 
-(* -------------------------------------------------------------------------- *)
-type options =
-  <
-    enableHighAccuracy        : bool Js.readonly_prop ;
-    timeout                   : int Js.readonly_prop ;
-    maximumAge                : int Js.readonly_prop
-  > Js.t
+let position_error_code_to_value c = match c with
+  | 1 -> Permission_denied
+  | 2 -> Position_unavailable
+  | 3 -> Timeout
+  | _ -> Unknown
+]
 
-val create_options :  ?enable_high_accuracy:bool ->
-                      ?timeout:int ->
-                      ?maximum_age:int ->
-                      unit -> options
-(* -------------------------------------------------------------------------- *)
-
-(* -------------------------------------------------------------------------- *)
-class type geolocation =
+class position_error : Ojs.t ->
   object
-    method getCurrentPosition : (position -> unit) ->
-                                (position_error -> unit) ->
-                                options -> unit Js.meth
-    method watchPosition      : (position -> unit) ->
-                                (position_error -> unit) ->
-                                options -> watch_id Js.meth
-    method clearWatch         : watch_id -> unit Js.meth
+    inherit Ojs.obj
+    method code      : int
+    method message   : string
   end
 (* -------------------------------------------------------------------------- *)
 
 (* -------------------------------------------------------------------------- *)
-val geolocation : unit -> geolocation Js.t
+class options : Ojs.t ->
+  object
+    inherit Ojs.obj
+    method enable_high_accuracy       : bool
+    method timeout                    : int
+    method maximum_age                : int
+  end
+
+val create_options :
+  ?enable_high_accuracy:(bool [@js.default true]) ->
+  ?timeout:(int [@js.default 5000])               ->
+  ?maximum_age:(int [@js.default 3000])           ->
+  unit                                            ->
+  options
+[@@js.builder]
+(* -------------------------------------------------------------------------- *)
+
+(* -------------------------------------------------------------------------- *)
+class geolocation : Ojs.t ->
+  object
+    inherit Ojs.obj
+    method get_current_position : (position -> unit) ->
+                                  (position_error -> unit) ->
+                                  options ->
+                                  unit
+    method watch_position       : (position -> unit) ->
+                                  (position_error -> unit) ->
+                                  options ->
+                                  int
+    method clear_watch          : watch_id ->
+                                  unit
+  end
+(* -------------------------------------------------------------------------- *)
+
+(* -------------------------------------------------------------------------- *)
+val t : unit -> geolocation
+[@@js.get "navigator.geolocation"]
 (* -------------------------------------------------------------------------- *)

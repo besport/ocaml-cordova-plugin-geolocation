@@ -21,6 +21,19 @@ devices that don't already provide an implementation.
 
 Source: [cordova-plugin-geolocation](https://github.com/apache/cordova-plugin-geolocation)
 
+## Repository branches and tags
+
+We are migrating bindings from
+[js_of_ocaml](https://github.com/ocsigen/js_of_ocaml) (low level bindings) to
+[gen_js_api](https://github.com/lexifi/gen_js_api) (high level bindings).
+
+The gen_js_api binding allows to use *pure* ocaml types (you don't have to use
+the ## syntax from js_of_ocaml or Js.string type but only # and string type).
+
+The js_of_ocaml version is available in the branch
+[*js_of_ocaml*](https://github.com/dannywillems/ocaml-cordova-plugin-geolocation/tree/js_of_ocaml)
+but we **recommend** to use the gen_js_api version which is the master branch.
+
 ## How to use ?
 
 * TODO
@@ -38,13 +51,13 @@ We don't provide a *navigator.geolocation* variable in this plugin (as said in t
 documentation on js_of_ocaml). If we did, *navigator.geolocation* will be set to **undefined**
 because the *navigator.geolocation* object doesn't exist when we create the variable.
 
-Instead, we provide a function *geolocation* of type *unit -> geolocation Js.t* which creates the
+Instead, we provide a function *Geolocation.t* of type *unit -> geolocation* which creates the
 binding to the *navigator.geolocation* object. You must call it when the deviceready
 event is handled, eg
 
 ```OCaml
-let on_device_ready =
-  let geolocation = GeolocationCordova.geolocation () in
+let on_device_ready _ =
+  let geolocation = GeolocationCordova.t () in
   (* Some code *)
 
 let _ =

@@ -43,8 +43,8 @@ binding to the *navigator.geolocation* object. You must call it when the devicer
 event is handled, eg
 
 ```OCaml
-let on_device_ready =
-  let geolocation = GeolocationCordova.geolocation () in
+let on_device_ready _ =
+  let geolocation = Geolocation_cordova.geolocation () in
   (* Some code *)
 
 let _ =

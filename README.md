@@ -37,27 +37,19 @@ but we **recommend** to use the gen_js_api version which is the master branch.
 ## How to use ?
 
 * TODO
-* The coordinates type provides each properties as 'a Js.opt type because, when we
-did some tests, some values were set to null. See the example application for
-more informations.
-
 
 ## ! BE CAREFUL !
 
 The plugin creates a new object called *navigator.geolocation*, but the object is
 available when the *deviceready* event is handled.
 
-We don't provide a *navigator.geolocation* variable in this plugin (as said in the official
-documentation on js_of_ocaml). If we did, *navigator.geolocation* will be set to **undefined**
-because the *navigator.geolocation* object doesn't exist when we create the variable.
-
-Instead, we provide a function *Geolocation.t* of type *unit -> geolocation* which creates the
+We provide a function *Geolocation.t* of type *unit -> geolocation* which creates the
 binding to the *navigator.geolocation* object. You must call it when the deviceready
-event is handled, eg
+event is handled, eg (with js_of_ocaml)
 
 ```OCaml
 let on_device_ready _ =
-  let geolocation = GeolocationCordova.t () in
+  let geolocation = Geolocation_cordova.t () in
   (* Some code *)
 
 let _ =

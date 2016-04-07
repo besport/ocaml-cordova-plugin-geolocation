@@ -4,10 +4,8 @@ type watch_id
 
 (* -------------------------------------------------------------------------- *)
 (* FIXME
- * All types are set to 'a Js.opt because during tests (nexus 5, android 6.0.1),
+ * All types are set to 'a option because during tests (nexus 5, android 6.0.1),
  * some values were null and where sent to null.
- * Use Js.Opt.to_option c##prop to convert to option type and match ... with.
- * See the example.
  * AltitudeAccuracy: not supported on android devices and Amazon Fire OS. Set
  * null in these cases.
  *)

@@ -1,8 +1,4 @@
 (* -------------------------------------------------------------------------- *)
-type watch_id
-(* -------------------------------------------------------------------------- *)
-
-(* -------------------------------------------------------------------------- *)
 (* FIXME
  * All types are set to 'a option because during tests (nexus 5, android 6.0.1),
  * some values were null and where sent to null.
@@ -93,7 +89,7 @@ class geolocation : Ojs.t ->
                                   (position_error -> unit) ->
                                   options ->
                                   int
-    method clear_watch          : watch_id ->
+    method clear_watch          : int ->
                                   unit
   end
 (* -------------------------------------------------------------------------- *)

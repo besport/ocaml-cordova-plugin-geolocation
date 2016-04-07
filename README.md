@@ -74,7 +74,7 @@ event is handled, eg (with js_of_ocaml)
 
 ```OCaml
 let on_device_ready _ =
-  let geolocation = Geolocation_cordova.t () in
+  let geolocation = Cordova_geolocation.t () in
   (* Some code *)
 
 let _ =

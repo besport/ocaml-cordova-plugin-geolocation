@@ -12,7 +12,7 @@ class coordinates : Ojs.t ->
     method longitude           : float option
     method altitude            : float option
     method accuracy            : float option
-    method altitudeAccuracy    : float option
+    method altitude_accuracy   : float option
     method heading             : float option
     method speed               : float option
   end
@@ -32,29 +32,16 @@ class position : Ojs.t ->
  * int. For the binding, we need to use an integer but we provide a
  * position_error type and a function taking the integer returned by the error
  * whic returns the corresping value for the ocaml type. *)
-[@@@js.stop]
-type position_error_code
-val position_error_code_to_value : int -> position_error_code
-[@@@js.start]
-
-[@@@js.implem
 type position_error_code =
-  | Permission_denied
-  | Position_unavailable
-  | Timeout
-  | Unknown
-
-let position_error_code_to_value c = match c with
-  | 1 -> Permission_denied
-  | 2 -> Position_unavailable
-  | 3 -> Timeout
-  | _ -> Unknown
-]
+  | Permission_denied [@js 1]
+  | Position_unavailable [@js 2]
+  | Timeout [@js 3]
+  [@@js.enum]
 
 class position_error : Ojs.t ->
   object
     inherit Ojs.obj
-    method code      : int
+    method code      : position_error_code
     method message   : string
   end
 (* -------------------------------------------------------------------------- *)
@@ -81,15 +68,15 @@ val create_options :
 class geolocation : Ojs.t ->
   object
     inherit Ojs.obj
-    method get_current_position : (position -> unit) ->
-                                  (position_error -> unit) ->
-                                  options ->
+    method get_current_position : (position -> unit)        ->
+                                  (position_error -> unit)  ->
+                                  options                   ->
                                   unit
-    method watch_position       : (position -> unit) ->
-                                  (position_error -> unit) ->
-                                  options ->
+    method watch_position       : (position -> unit)        ->
+                                  (position_error -> unit)  ->
+                                  options                   ->
                                   int
-    method clear_watch          : int ->
+    method clear_watch          : int                       ->
                                   unit
   end
 (* -------------------------------------------------------------------------- *)

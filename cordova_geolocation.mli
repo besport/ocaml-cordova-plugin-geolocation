@@ -60,10 +60,10 @@ val position_error_message : position_error -> string
 type options = private Ojs.t
 
 val create_options :
-  ?enable_high_accuracy:(bool [@js.default true]) ->
-  ?timeout:(int [@js.default 5000])               ->
-  ?maximum_age:(int [@js.default 3000])           ->
-  unit                                            ->
+  ?enable_high_accuracy:(bool [@js.default true])       ->
+  ?timeout:(int [@js.default 5000])                     ->
+  ?maximum_age:(int [@js.default 3000])                 ->
+  unit                                                  ->
   options
 [@@js.builder]
 (* -------------------------------------------------------------------------- *)
@@ -78,14 +78,15 @@ val get_current_position :
 [@@js.global "navigator.geolocation.getCurrentPosition"]
 
 val watch_position :
-  (position -> unit)        ->
-  (position_error -> unit)  ->
-  options                   ->
+  (position -> unit)                                    ->
+  (position_error -> unit)                              ->
+  ?options:(options [@js.default create_options ()])    ->
+  unit                                                  ->
   int
 [@@js.global "navigator.geolocation.watchPosition"]
 
 val clear_watch :
-  int                       ->
+  int                                                   ->
   unit
 [@@js.global "navigator.geolocation.clearWatch"]
 (* -------------------------------------------------------------------------- *)

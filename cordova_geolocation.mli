@@ -1,7 +1,7 @@
 (* -------------------------------------------------------------------------- *)
 (* FIXME
  * All types are set to 'a option because during tests (nexus 5, android 6.0.1),
- * some values were null and where sent to null.
+ * some values were null and were sent to null.
  * AltitudeAccuracy: not supported on android devices and Amazon Fire OS. Set
  * null in these cases.
  *)

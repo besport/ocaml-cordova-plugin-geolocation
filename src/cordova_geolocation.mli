@@ -7,31 +7,31 @@
  *)
 type coordinates = private Ojs.t
 
-val latitude            : coordinates -> float option
-[@@js.get "latitude"]
-val longitude           : coordinates -> float option
-[@@js.get "longitude"]
-val altitude            : coordinates -> float option
-[@@js.get "altitude"]
-val accuracy            : coordinates -> float option
-[@@js.get "accuracy"]
-val altitude_accuracy   : coordinates -> float option
-[@@js.get "altitudeAccuracy"]
-val heading             : coordinates -> float option
-[@@js.get "heading"]
-val speed               : coordinates -> float option
-[@@js.get "speed"]
+val latitude : coordinates -> float option [@@js.get "latitude"]
+
+val longitude : coordinates -> float option [@@js.get "longitude"]
+
+val altitude : coordinates -> float option [@@js.get "altitude"]
+
+val accuracy : coordinates -> float option [@@js.get "accuracy"]
+
+val altitude_accuracy : coordinates -> float option
+  [@@js.get "altitudeAccuracy"]
+
+val heading : coordinates -> float option [@@js.get "heading"]
+
+val speed : coordinates -> float option [@@js.get "speed"]
+
 (* -------------------------------------------------------------------------- *)
 
 (* -------------------------------------------------------------------------- *)
 type position = private Ojs.t
 
-val coords : position -> coordinates
-[@@js.get "coords"]
+val coords : position -> coordinates [@@js.get "coords"]
 
 (* A timestamp is just an integer *)
-val timestamp : position -> int
-[@@js.get "timestamp"]
+val timestamp : position -> int [@@js.get "timestamp"]
+
 (* -------------------------------------------------------------------------- *)
 
 (* -------------------------------------------------------------------------- *)
@@ -47,46 +47,56 @@ type position_error_code =
   | Permission_denied [@js 1]
   | Position_unavailable [@js 2]
   | Timeout [@js 3]
-  [@@js.enum]
+[@@js.enum]
 
 val position_error_code : position_error -> position_error_code
-[@@js.get "code"]
+  [@@js.get "code"]
 
-val position_error_message : position_error -> string
-[@@js.get "message"]
+val position_error_message : position_error -> string [@@js.get "message"]
+
 (* -------------------------------------------------------------------------- *)
 
 (* -------------------------------------------------------------------------- *)
 type options = private Ojs.t
 
 val create_options :
-  ?enable_high_accuracy:(bool [@js.default true])       ->
-  ?timeout:(int [@js.default 5000])                     ->
-  ?maximum_age:(int [@js.default 3000])                 ->
-  unit                                                  ->
+  ?enable_high_accuracy:(bool[@js.default true]) ->
+  ?timeout:(int[@js.default 5000]) ->
+  ?maximum_age:(int[@js.default 3000]) ->
+  unit ->
   options
-[@@js.builder]
+  [@@js.builder]
+
 (* -------------------------------------------------------------------------- *)
 
 (* -------------------------------------------------------------------------- *)
 val get_current_position :
-  (position -> unit)                                    ->
-  (position_error -> unit)                              ->
-  ?options:(options [@js.default create_options ()])    ->
-  unit                                                  ->
+  (position -> unit) ->
+  (position_error -> unit) ->
+  ?options:(options[@js.default create_options ()]) ->
+  unit ->
   unit
-[@@js.global "navigator.geolocation.getCurrentPosition"]
+  [@@js.global "navigator.geolocation.getCurrentPosition"]
 
 val watch_position :
-  (position -> unit)                                    ->
-  (position_error -> unit)                              ->
-  ?options:(options [@js.default create_options ()])    ->
-  unit                                                  ->
+  (position -> unit) ->
+  (position_error -> unit) ->
+  ?options:(options[@js.default create_options ()]) ->
+  unit ->
   int
-[@@js.global "navigator.geolocation.watchPosition"]
+  [@@js.global "navigator.geolocation.watchPosition"]
 
-val clear_watch :
-  int                                                   ->
-  unit
-[@@js.global "navigator.geolocation.clearWatch"]
+val clear_watch : int -> unit [@@js.global "navigator.geolocation.clearWatch"]
+
 (* -------------------------------------------------------------------------- *)
+
+[@@@js.stop]
+
+val available : unit -> bool
+
+[@@@js.start]
+
+[@@@js.implem
+let available () =
+  Js_of_ocaml.Js.Optdef.test
+    Js_of_ocaml.Js.Unsafe.global##.navigator##.geolocation]

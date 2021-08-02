@@ -1,22 +1,17 @@
-opam-version: "1.2"
+opam-version: "2.0"
 name:         "ocaml-cordova-plugin-geolocation"
 maintainer:   "Danny Willems <contact@danny-willems.be>"
-author:       "Danny Willems <contact@danny-willems.be>"
-
+authors:       "Danny Willems <contact@danny-willems.be>"
 homepage:     "https://github.com/dannywillems/ocaml-cordova-plugin-geolocation"
 bug-reports:  "https://github.com/dannywillems/ocaml-cordova-plugin-geolocation/issues"
-
 dev-repo:     "https://github.com/dannywillems/ocaml-cordova-plugin-geolocation"
-
 license:      "LGPL-3.0 with OCaml linking exception"
-
-version:      "1.0"
-
-build: [make "build"]
-install: [make "install"]
-remove: [make "remove"]
-
+version:      "1.1"
+build: [[ "dune" "build" "-j" jobs "-p" name "@install" ]]
 depends: [
+  "ocaml" { >= "4.08.0"}
+  "dune" {>= "2.8"}
   "gen_js_api"
+  "js_of_ocaml" {>= "3.8.0" & < "3.9.0"}
+  "js_of_ocaml-ppx" {>= "3.8.0" & < "3.9.0"}
 ]
-available: [ ocaml-version >= "4.03.0" ]

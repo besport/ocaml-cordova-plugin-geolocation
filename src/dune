@@ -7,6 +7,6 @@
  (public_name cordova-plugin-geolocation)
  (name cordova_geolocation)
  (modes byte)
- (libraries gen_js_api js_of_ocaml js_of_ocaml-ppx)
+ (libraries gen_js_api js_of_ocaml)
  (preprocess (pps js_of_ocaml-ppx))
 )
